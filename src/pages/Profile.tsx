@@ -185,6 +185,15 @@ export default function Profile() {
     );
   };
 
+  const renderReadOnlyField = (label: string, value: string | null) => {
+    return (
+      <div className="flex items-center justify-between py-2 border-b border-border last:border-0">
+        <span className="text-sm font-medium text-muted-foreground">{label}:</span>
+        <span className="text-sm">{value || "N/A"}</span>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -231,19 +240,22 @@ export default function Profile() {
                   <AccordionTrigger>Step 1: Company Details</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-1">
-                      {renderEditableField("Company Name", "company_name", kybData.company_name)}
+                      {renderReadOnlyField("Company Name", kybData.company_name)}
                       {renderEditableField("Trading Name", "trading_name", kybData.trading_name)}
-                      {renderEditableField(
+                      {renderReadOnlyField(
                         "Registration Number",
-                        "company_registration_number",
                         kybData.company_registration_number
                       )}
-                      {renderEditableField(
+                      {renderReadOnlyField(
                         "Registration Date",
-                        "company_registration_date",
                         kybData.company_registration_date
                       )}
-                      {renderEditableField("Entity Type", "entity_type", kybData.entity_type)}
+                      {renderReadOnlyField("Entity Type", kybData.entity_type)}
+                      {renderEditableField(
+                        "Country of Registration",
+                        "country_of_registration",
+                        kybData.country_of_registration
+                      )}
                       {renderEditableField(
                         "Website/Business Channel",
                         "website_or_business_channel",
@@ -258,11 +270,6 @@ export default function Profile() {
                   <AccordionTrigger>Step 2: Industry Information</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-1">
-                      {renderEditableField(
-                        "Country of Registration",
-                        "country_of_registration",
-                        kybData.country_of_registration
-                      )}
                       {renderEditableField("Industry", "industry", kybData.industry)}
                       {renderEditableField("Sub-Industry", "sub_industry", kybData.sub_industry)}
                       {renderEditableField(

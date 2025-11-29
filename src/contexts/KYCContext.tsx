@@ -7,11 +7,11 @@ export interface CompanyDetails {
   companyRegistrationNumber: string;
   companyRegistrationDate: Date | undefined;
   entityType: string;
+  countryOfRegistration: string;
   websiteOrBusinessChannel: string;
 }
 
 export interface IndustryInfo {
-  countryOfRegistration: string;
   industry: string;
   subIndustry: string;
   goodsOrServices: string;
@@ -89,10 +89,10 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
                   ? new Date(submission.company_registration_date) 
                   : undefined,
                 entityType: submission.entity_type || '',
+                countryOfRegistration: submission.country_of_registration || '',
                 websiteOrBusinessChannel: submission.website_or_business_channel || '',
               },
               industryInfo: {
-                countryOfRegistration: submission.country_of_registration || '',
                 industry: submission.industry || '',
                 subIndustry: submission.sub_industry || '',
                 goodsOrServices: submission.goods_or_services || '',
@@ -183,10 +183,10 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
         updateData.company_registration_number = data.companyRegistrationNumber;
         updateData.company_registration_date = data.companyRegistrationDate?.toISOString().split('T')[0];
         updateData.entity_type = data.entityType;
+        updateData.country_of_registration = data.countryOfRegistration;
         updateData.website_or_business_channel = data.websiteOrBusinessChannel;
         updateData.step_1_completed = true;
       } else if (step === 2) {
-        updateData.country_of_registration = data.countryOfRegistration;
         updateData.industry = data.industry;
         updateData.sub_industry = data.subIndustry;
         updateData.goods_or_services = data.goodsOrServices;
