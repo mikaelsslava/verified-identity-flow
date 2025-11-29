@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export interface CompanyDetails {
   companyName: string;
@@ -60,6 +60,78 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
     transactionInfo: {},
     applicantDetails: {},
   });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load existing submission on mount
+  useEffect(() => {
+    const loadExistingData = async () => {
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          const { data: submission } = await supabase
+            .from('kyb_submissions')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+
+          if (submission) {
+            // Populate kybData from submission
+            setKYBData({
+              companyDetails: {
+                companyName: submission.company_name || '',
+                tradesUnderDifferentName: submission.trades_under_different_name || false,
+                tradingName: submission.trading_name || '',
+                companyRegistrationNumber: submission.company_registration_number || '',
+                companyRegistrationDate: submission.company_registration_date 
+                  ? new Date(submission.company_registration_date) 
+                  : undefined,
+                entityType: submission.entity_type || '',
+                websiteOrBusinessChannel: submission.website_or_business_channel || '',
+              },
+              industryInfo: {
+                countryOfRegistration: submission.country_of_registration || '',
+                industry: submission.industry || '',
+                subIndustry: submission.sub_industry || '',
+                goodsOrServices: submission.goods_or_services || '',
+              },
+              transactionInfo: {
+                incomingPaymentsMonthlyEuro: submission.incoming_payments_monthly_euro || '',
+                incomingPaymentCountries: submission.incoming_payment_countries || '',
+                incomingTransactionAmount: submission.incoming_transaction_amount || '',
+                outgoingPaymentsMonthlyEuro: submission.outgoing_payments_monthly_euro || '',
+                outgoingPaymentCountries: submission.outgoing_payment_countries || '',
+                outgoingTransactionAmount: submission.outgoing_transaction_amount || '',
+              },
+              applicantDetails: {
+                applicantFirstName: submission.applicant_first_name || '',
+                applicantLastName: submission.applicant_last_name || '',
+                applicantEmail: submission.applicant_email || '',
+              },
+            });
+
+            // Determine current step based on completed steps
+            if (submission.step_4_completed) {
+              setCurrentStep(4);
+            } else if (submission.step_3_completed) {
+              setCurrentStep(4);
+            } else if (submission.step_2_completed) {
+              setCurrentStep(3);
+            } else if (submission.step_1_completed) {
+              setCurrentStep(2);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading existing submission:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadExistingData();
+  }, []);
 
   const updateCompanyDetails = (data: Partial<CompanyDetails>) => {
     setKYBData((prev) => ({
