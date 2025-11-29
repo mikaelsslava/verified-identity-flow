@@ -27,7 +27,8 @@ import { useState } from 'react';
 import { countries } from '@/data/countries';
 
 const schema = z.object({
-  fullName: z.string().min(2, 'Full name is required').max(100),
+  firstName: z.string().min(2, 'First name is required').max(50),
+  lastName: z.string().min(2, 'Last name is required').max(50),
   dateOfBirth: z.date({ required_error: 'Date of birth is required' }),
   placeOfBirth: z.string().min(2, 'Place of birth is required').max(100),
   nationality: z.string().min(2, 'Nationality is required'),
@@ -74,17 +75,32 @@ export const PersonalInfoStep = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-4">
-        <div>
-          <Label htmlFor="fullName">Full Legal Name *</Label>
-          <Input
-            id="fullName"
-            {...register('fullName')}
-            placeholder="Enter your full legal name"
-            className="mt-1.5"
-          />
-          {errors.fullName && (
-            <p className="text-sm text-destructive mt-1">{errors.fullName.message}</p>
-          )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="firstName">First Name *</Label>
+            <Input
+              id="firstName"
+              {...register('firstName')}
+              placeholder="Enter your first name"
+              className="mt-1.5"
+            />
+            {errors.firstName && (
+              <p className="text-sm text-destructive mt-1">{errors.firstName.message}</p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="lastName">Last Name *</Label>
+            <Input
+              id="lastName"
+              {...register('lastName')}
+              placeholder="Enter your last name"
+              className="mt-1.5"
+            />
+            {errors.lastName && (
+              <p className="text-sm text-destructive mt-1">{errors.lastName.message}</p>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
