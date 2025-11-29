@@ -14,7 +14,126 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      kyc_submissions: {
+        Row: {
+          additional_citizenships: string | null
+          address_line1: string | null
+          address_line2: string | null
+          annual_income: string | null
+          city: string | null
+          completed_at: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          country: string | null
+          created_at: string
+          date_of_birth: string | null
+          document_expiry_date: string | null
+          document_file_url: string | null
+          document_number: string | null
+          document_type: string | null
+          employer: string | null
+          first_name: string | null
+          id: string
+          is_us_person: boolean | null
+          issuing_country: string | null
+          last_name: string | null
+          length_of_residence: string | null
+          nationality: string | null
+          occupation: string | null
+          place_of_birth: string | null
+          postal_code: string | null
+          source_of_funds: string | null
+          source_of_wealth: string | null
+          state: string | null
+          step_1_completed: boolean | null
+          step_2_completed: boolean | null
+          step_3_completed: boolean | null
+          step_4_completed: boolean | null
+          tax_identification_numbers: string | null
+          tax_residency_countries: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          additional_citizenships?: string | null
+          address_line1?: string | null
+          address_line2?: string | null
+          annual_income?: string | null
+          city?: string | null
+          completed_at?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          document_expiry_date?: string | null
+          document_file_url?: string | null
+          document_number?: string | null
+          document_type?: string | null
+          employer?: string | null
+          first_name?: string | null
+          id?: string
+          is_us_person?: boolean | null
+          issuing_country?: string | null
+          last_name?: string | null
+          length_of_residence?: string | null
+          nationality?: string | null
+          occupation?: string | null
+          place_of_birth?: string | null
+          postal_code?: string | null
+          source_of_funds?: string | null
+          source_of_wealth?: string | null
+          state?: string | null
+          step_1_completed?: boolean | null
+          step_2_completed?: boolean | null
+          step_3_completed?: boolean | null
+          step_4_completed?: boolean | null
+          tax_identification_numbers?: string | null
+          tax_residency_countries?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          additional_citizenships?: string | null
+          address_line1?: string | null
+          address_line2?: string | null
+          annual_income?: string | null
+          city?: string | null
+          completed_at?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          country?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          document_expiry_date?: string | null
+          document_file_url?: string | null
+          document_number?: string | null
+          document_type?: string | null
+          employer?: string | null
+          first_name?: string | null
+          id?: string
+          is_us_person?: boolean | null
+          issuing_country?: string | null
+          last_name?: string | null
+          length_of_residence?: string | null
+          nationality?: string | null
+          occupation?: string | null
+          place_of_birth?: string | null
+          postal_code?: string | null
+          source_of_funds?: string | null
+          source_of_wealth?: string | null
+          state?: string | null
+          step_1_completed?: boolean | null
+          step_2_completed?: boolean | null
+          step_3_completed?: boolean | null
+          step_4_completed?: boolean | null
+          tax_identification_numbers?: string | null
+          tax_residency_countries?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
