@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface PersonalInfo {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   dateOfBirth: Date | undefined;
   placeOfBirth: string;
   nationality: string;
