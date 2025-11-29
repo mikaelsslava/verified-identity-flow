@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
+import { countries } from '@/data/countries';
 
 const formSchema = z.object({
   companyName: z.string().min(1, 'Company name is required'),
@@ -17,6 +18,7 @@ const formSchema = z.object({
   companyRegistrationNumber: z.string().min(1, 'Registration number is required'),
   companyRegistrationDate: z.date({ required_error: 'Registration date is required' }),
   entityType: z.string().min(1, 'Entity type is required'),
+  countryOfRegistration: z.string().min(1, 'Country of registration is required'),
   websiteOrBusinessChannel: z.string().min(1, 'This field is required'),
 });
 
@@ -145,6 +147,31 @@ export const CompanyDetailsStep = () => {
                   <SelectItem value="plc">Public Limited Company</SelectItem>
                   <SelectItem value="charity">Charity</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="countryOfRegistration"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country of registration</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {countries.map((country) => (
+                    <SelectItem key={country.value} value={country.value}>
+                      {country.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
