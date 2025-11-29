@@ -27,7 +27,7 @@ export default function Login() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/kyc');
+        navigate('/profile');
       }
     };
     checkAuth();
@@ -52,7 +52,7 @@ export default function Login() {
       if (error) throw error;
 
       toast.success('Logged in successfully');
-      navigate('/kyc');
+      navigate('/profile');
     } catch (error: any) {
       toast.error(error.message || 'Failed to login');
     } finally {
