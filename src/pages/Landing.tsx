@@ -8,6 +8,27 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      {/* Navigation */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Shield className="h-6 w-6 text-primary" />
+            <span className="font-semibold">KYB Verification</span>
+          </div>
+          <div className="flex gap-3">
+            <Button variant="ghost" onClick={() => navigate('/verify')}>
+              Verify Badge
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/login')}>
+              Login
+            </Button>
+            <Button onClick={() => navigate('/signup')}>
+              Sign Up
+            </Button>
+          </div>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto mb-16">
