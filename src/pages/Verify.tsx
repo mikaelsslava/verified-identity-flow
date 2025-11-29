@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, CheckCircle, XCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Shield, CheckCircle, XCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const schema = z.object({
-  companyRegistrationNumber: z.string().min(1, 'Company registration number is required'),
+  companyRegistrationNumber: z.string().min(1, "Company registration number is required"),
 });
 
 type VerifyForm = z.infer<typeof schema>;
@@ -33,13 +33,13 @@ export default function Verify() {
     try {
       setIsLoading(true);
       setHasSearched(false);
-      
+
       // Query database to check if company exists with completed submission
       const { data: submissions, error } = await supabase
-        .from('kyb_submissions')
-        .select('id')
-        .ilike('company_registration_number', data.companyRegistrationNumber)
-        .not('completed_at', 'is', null)
+        .from("kyb_submissions")
+        .select("id")
+        .ilike("company_registration_number", data.companyRegistrationNumber)
+        .not("completed_at", "is", null)
         .limit(1);
 
       if (error) throw error;
@@ -47,7 +47,7 @@ export default function Verify() {
       setVerificationResult(submissions && submissions.length > 0);
       setHasSearched(true);
     } catch (error) {
-      console.error('Verification error:', error);
+      console.error("Verification error:", error);
       setVerificationResult(false);
       setHasSearched(true);
     } finally {
@@ -66,24 +66,17 @@ export default function Verify() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
-            <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-4">
-              ← Back to Home
-            </Link>
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
               <Shield className="h-8 w-8 text-primary" />
             </div>
             <h1 className="text-4xl font-bold mb-4">Verify KYB Badge</h1>
-            <p className="text-xl text-muted-foreground">
-              Check if a company has completed their KYB verification
-            </p>
+            <p className="text-xl text-muted-foreground">Check if a company has completed their KYB verification</p>
           </div>
 
           <Card>
             <CardHeader>
               <CardTitle>Company Verification</CardTitle>
-              <CardDescription>
-                Enter the company registration number to verify their KYB badge status
-              </CardDescription>
+              <CardDescription>Enter the company registration number to verify their KYB badge status</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -92,7 +85,7 @@ export default function Verify() {
                   <Input
                     id="companyRegistrationNumber"
                     placeholder="e.g., 12345678"
-                    {...register('companyRegistrationNumber')}
+                    {...register("companyRegistrationNumber")}
                   />
                   {errors.companyRegistrationNumber && (
                     <p className="text-sm text-destructive">{errors.companyRegistrationNumber.message}</p>
@@ -100,7 +93,7 @@ export default function Verify() {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Verifying...' : 'Verify Badge'}
+                  {isLoading ? "Verifying..." : "Verify Badge"}
                 </Button>
               </form>
 
