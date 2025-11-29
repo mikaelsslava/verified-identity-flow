@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { LogOut, Shield, Edit2, Save, X } from "lucide-react";
+import { industries, type Industry } from "@/data/industries";
 
 type KYBData = {
   id: string;
@@ -48,6 +50,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>("");
+  const [selectedIndustry, setSelectedIndustry] = useState<Industry | "">("");
 
   useEffect(() => {
     fetchData();
@@ -110,6 +113,9 @@ export default function Profile() {
   const startEditing = (field: string, currentValue: string) => {
     setEditingField(field);
     setEditValue(currentValue || "");
+    if (field === "sub_industry" && kybData?.industry) {
+      setSelectedIndustry(kybData.industry as Industry);
+    }
   };
 
   const cancelEditing = () => {
@@ -194,6 +200,154 @@ export default function Profile() {
     );
   };
 
+  const renderSelectField = (
+    label: string,
+    field: keyof KYBData,
+    value: string | null,
+    options: { label: string; value: string }[]
+  ) => {
+    const isEditing = editingField === field;
+
+    return (
+      <div className="flex items-center justify-between py-2 border-b border-border last:border-0">
+        <span className="text-sm font-medium text-muted-foreground">{label}:</span>
+        {isEditing ? (
+          <div className="flex items-center gap-2">
+            <Select value={editValue} onValueChange={setEditValue}>
+              <SelectTrigger className="h-8 w-64">
+                <SelectValue placeholder={`Select ${label.toLowerCase()}`} />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                {options.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button size="icon" variant="ghost" onClick={() => saveField(field)} className="h-8 w-8">
+              <Save className="h-4 w-4" />
+            </Button>
+            <Button size="icon" variant="ghost" onClick={cancelEditing} className="h-8 w-8">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{value || "N/A"}</span>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => startEditing(field, value || "")}
+              className="h-8 w-8"
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderIndustryField = () => {
+    const isEditing = editingField === "industry";
+
+    return (
+      <div className="flex items-center justify-between py-2 border-b border-border last:border-0">
+        <span className="text-sm font-medium text-muted-foreground">Industry:</span>
+        {isEditing ? (
+          <div className="flex items-center gap-2">
+            <Select
+              value={editValue}
+              onValueChange={(value) => {
+                setEditValue(value);
+                setSelectedIndustry(value as Industry);
+              }}
+            >
+              <SelectTrigger className="h-8 w-64">
+                <SelectValue placeholder="Select industry" />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                {Object.keys(industries).map((industry) => (
+                  <SelectItem key={industry} value={industry}>
+                    {industry}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button size="icon" variant="ghost" onClick={() => saveField("industry")} className="h-8 w-8">
+              <Save className="h-4 w-4" />
+            </Button>
+            <Button size="icon" variant="ghost" onClick={cancelEditing} className="h-8 w-8">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{kybData?.industry || "N/A"}</span>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => {
+                startEditing("industry", kybData?.industry || "");
+                setSelectedIndustry((kybData?.industry as Industry) || "");
+              }}
+              className="h-8 w-8"
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderSubIndustryField = () => {
+    const isEditing = editingField === "sub_industry";
+    const currentIndustry = selectedIndustry || (kybData?.industry as Industry);
+    const subIndustries = currentIndustry && industries[currentIndustry] ? industries[currentIndustry] : [];
+
+    return (
+      <div className="flex items-center justify-between py-2 border-b border-border last:border-0">
+        <span className="text-sm font-medium text-muted-foreground">Sub-Industry:</span>
+        {isEditing ? (
+          <div className="flex items-center gap-2">
+            <Select value={editValue} onValueChange={setEditValue}>
+              <SelectTrigger className="h-8 w-64">
+                <SelectValue placeholder="Select sub-industry" />
+              </SelectTrigger>
+              <SelectContent className="bg-background z-50">
+                {subIndustries.map((subIndustry) => (
+                  <SelectItem key={subIndustry} value={subIndustry}>
+                    {subIndustry}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button size="icon" variant="ghost" onClick={() => saveField("sub_industry")} className="h-8 w-8">
+              <Save className="h-4 w-4" />
+            </Button>
+            <Button size="icon" variant="ghost" onClick={cancelEditing} className="h-8 w-8">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{kybData?.sub_industry || "N/A"}</span>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => startEditing("sub_industry", kybData?.sub_industry || "")}
+              className="h-8 w-8"
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -270,12 +424,18 @@ export default function Profile() {
                   <AccordionTrigger>Step 2: Industry Information</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-1">
-                      {renderEditableField("Industry", "industry", kybData.industry)}
-                      {renderEditableField("Sub-Industry", "sub_industry", kybData.sub_industry)}
-                      {renderEditableField(
+                      {renderIndustryField()}
+                      {renderSubIndustryField()}
+                      {renderSelectField(
                         "Goods or Services",
                         "goods_or_services",
-                        kybData.goods_or_services
+                        kybData.goods_or_services,
+                        [
+                          { label: "Physical goods", value: "physical-goods" },
+                          { label: "Digital goods", value: "digital-goods" },
+                          { label: "Services", value: "services" },
+                          { label: "Mixed (goods and services)", value: "mixed" },
+                        ]
                       )}
                     </div>
                   </AccordionContent>
