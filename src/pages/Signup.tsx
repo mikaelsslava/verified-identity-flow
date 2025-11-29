@@ -44,8 +44,8 @@ export default function Signup() {
 
       if (error) throw error;
 
-      toast.success('Account created! Redirecting to KYC...');
-      navigate('/kyc');
+      toast.success('Account created! Redirecting...');
+      navigate('/profile');
     } catch (error: any) {
       toast.error(error.message || 'Failed to create account');
     } finally {

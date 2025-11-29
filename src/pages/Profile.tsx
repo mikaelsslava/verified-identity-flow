@@ -358,8 +358,38 @@ export default function Profile() {
 
   if (!kybData) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">No data found</p>
+      <div className="min-h-screen bg-background">
+        <div className="container max-w-6xl mx-auto py-8 px-4">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <Shield className="h-8 w-8 text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">SnapAML</h1>
+            </Link>
+            <Button onClick={handleLogout} variant="outline">
+              <LogOut className="h-4 w-4 mr-2" />
+              Log Out
+            </Button>
+          </div>
+
+          {/* No Data State */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Welcome to SnapAML</CardTitle>
+              <CardDescription>
+                Get started by adding your company information
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center py-8">
+              <p className="text-muted-foreground mb-6 text-center">
+                You haven't added your company information yet. Click the button below to get started with the KYB verification process.
+              </p>
+              <Button onClick={() => navigate('/kyc')} size="lg">
+                Add Company Information
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
