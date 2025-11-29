@@ -114,7 +114,9 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
 
             // Determine current step based on completed steps
             if (submission.step_4_completed) {
-              setCurrentStep(4);
+              // If all steps completed, redirect to profile
+              window.location.href = '/profile';
+              return;
             } else if (submission.step_3_completed) {
               setCurrentStep(4);
             } else if (submission.step_2_completed) {
