@@ -98,21 +98,61 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const submitStep = async (step: number, data: any) => {
-    // Mock API call - replace with your actual backend endpoint
     try {
-      const response = await fetch(`/api/kyc/step/${step}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
 
-      if (!response.ok) {
-        throw new Error('Failed to submit step');
+      // Prepare the data based on the step
+      const updateData: any = {
+        user_id: user.id,
+      };
+
+      if (step === 1) {
+        updateData.first_name = data.firstName;
+        updateData.last_name = data.lastName;
+        updateData.date_of_birth = data.dateOfBirth?.toISOString().split('T')[0];
+        updateData.place_of_birth = data.placeOfBirth;
+        updateData.nationality = data.nationality;
+        updateData.additional_citizenships = data.additionalCitizenships;
+        updateData.address_line1 = data.addressLine1;
+        updateData.address_line2 = data.addressLine2;
+        updateData.city = data.city;
+        updateData.state = data.state;
+        updateData.postal_code = data.postalCode;
+        updateData.country = data.country;
+        updateData.length_of_residence = data.lengthOfResidence;
+        updateData.contact_email = data.contactEmail;
+        updateData.contact_phone = data.contactPhone;
+        updateData.step_1_completed = true;
+      } else if (step === 2) {
+        updateData.document_type = data.documentType;
+        updateData.document_number = data.documentNumber;
+        updateData.issuing_country = data.issuingCountry;
+        updateData.document_expiry_date = data.expiryDate?.toISOString().split('T')[0];
+        updateData.step_2_completed = true;
+      } else if (step === 3) {
+        updateData.is_us_person = data.isUSPerson;
+        updateData.tax_residency_countries = data.taxResidencyCountries;
+        updateData.tax_identification_numbers = data.taxIdentificationNumbers;
+        updateData.step_3_completed = true;
+      } else if (step === 4) {
+        updateData.occupation = data.occupation;
+        updateData.employer = data.employer;
+        updateData.annual_income = data.annualIncome;
+        updateData.source_of_funds = data.sourceOfFunds;
+        updateData.source_of_wealth = data.sourceOfWealth;
+        updateData.step_4_completed = true;
       }
 
-      return await response.json();
+      const { error } = await supabase
+        .from('kyc_submissions')
+        .upsert(updateData, {
+          onConflict: 'user_id',
+        });
+
+      if (error) throw error;
     } catch (error) {
       console.error('Error submitting step:', error);
       throw error;

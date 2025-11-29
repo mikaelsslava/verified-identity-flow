@@ -21,7 +21,7 @@ export default function Landing() {
             Complete our KYC verification once and use your verified badge across multiple financial partners. 
             Trusted by banks, accountants, and financial institutions.
           </p>
-          <Button size="lg" onClick={() => navigate('/kyc')} className="text-lg px-8 py-6">
+          <Button size="lg" onClick={() => navigate('/signup')} className="text-lg px-8 py-6">
             Start Verification
           </Button>
         </div>
@@ -94,7 +94,7 @@ export default function Landing() {
             </div>
           </div>
           
-          <Button size="lg" onClick={() => navigate('/kyc')} className="mt-12 text-lg px-8 py-6">
+          <Button size="lg" onClick={() => navigate('/signup')} className="mt-12 text-lg px-8 py-6">
             Begin Verification Process
           </Button>
         </div>
