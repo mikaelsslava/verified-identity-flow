@@ -441,10 +441,13 @@ export default function Profile() {
               <Shield className="h-8 w-8 text-primary" />
               <h1 className="text-2xl font-bold text-foreground">SnapAML</h1>
             </Link>
-            <Button onClick={handleLogout} variant="outline">
-              <LogOut className="h-4 w-4 mr-2" />
-              Log Out
-            </Button>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">{userEmail}</span>
+              <Button onClick={handleLogout} variant="outline">
+                <LogOut className="h-4 w-4 mr-2" />
+                Log Out
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-6">
@@ -556,10 +559,13 @@ export default function Profile() {
             <Shield className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold text-foreground">SnapAML</h1>
           </Link>
-          <Button onClick={handleLogout} variant="outline">
-            <LogOut className="h-4 w-4 mr-2" />
-            Log Out
-          </Button>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">{userEmail}</span>
+            <Button onClick={handleLogout} variant="outline">
+              <LogOut className="h-4 w-4 mr-2" />
+              Log Out
+            </Button>
+          </div>
         </div>
 
         {/* Main Content */}
