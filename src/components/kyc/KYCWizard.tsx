@@ -1,28 +1,28 @@
 import { useKYC } from '@/contexts/KYCContext';
 import { ProgressIndicator } from './ProgressIndicator';
-import { PersonalInfoStep } from './steps/PersonalInfoStep';
-import { IdentificationStep } from './steps/IdentificationStep';
-import { TaxInfoStep } from './steps/TaxInfoStep';
-import { EmploymentStep } from './steps/EmploymentStep';
+import { CompanyDetailsStep } from './steps/CompanyDetailsStep';
+import { IndustryInfoStep } from './steps/IndustryInfoStep';
+import { TransactionInfoStep } from './steps/TransactionInfoStep';
+import { ApplicantDetailsStep } from './steps/ApplicantDetailsStep';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield } from 'lucide-react';
 
 const stepTitles = [
   {
-    title: 'Personal Information',
-    description: 'Tell us about yourself',
+    title: 'Company Details',
+    description: 'Basic company information',
   },
   {
-    title: 'Identification',
-    description: 'Verify your identity',
+    title: 'Industry & Business Type',
+    description: 'What does your company do?',
   },
   {
-    title: 'Tax Information',
-    description: 'Tax residency and compliance',
+    title: 'Transaction Information',
+    description: 'Payment flow details',
   },
   {
-    title: 'Employment & Income',
-    description: 'Financial background information',
+    title: 'Applicant Details',
+    description: 'Who is submitting this application?',
   },
 ];
 
@@ -32,15 +32,15 @@ export const KYCWizard = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <PersonalInfoStep />;
+        return <CompanyDetailsStep />;
       case 2:
-        return <IdentificationStep />;
+        return <IndustryInfoStep />;
       case 3:
-        return <TaxInfoStep />;
+        return <TransactionInfoStep />;
       case 4:
-        return <EmploymentStep />;
+        return <ApplicantDetailsStep />;
       default:
-        return <PersonalInfoStep />;
+        return <CompanyDetailsStep />;
     }
   };
 
@@ -54,9 +54,9 @@ export const KYCWizard = () => {
               <Shield className="w-8 h-8 text-primary" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold mb-2">KYC Verification</h1>
+          <h1 className="text-3xl font-bold mb-2">Business Verification</h1>
           <p className="text-muted-foreground">
-            Complete your verification to access your reusable KYC badge
+            Complete your company verification to access your reusable KYB badge
           </p>
         </div>
 

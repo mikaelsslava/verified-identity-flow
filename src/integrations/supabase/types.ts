@@ -14,123 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      kyc_submissions: {
+      kyb_submissions: {
         Row: {
-          additional_citizenships: string | null
-          address_line1: string | null
-          address_line2: string | null
-          annual_income: string | null
-          city: string | null
+          applicant_email: string | null
+          applicant_first_name: string | null
+          applicant_last_name: string | null
+          company_name: string | null
+          company_registration_date: string | null
+          company_registration_number: string | null
           completed_at: string | null
-          contact_email: string | null
-          contact_phone: string | null
-          country: string | null
+          country_of_registration: string | null
           created_at: string
-          date_of_birth: string | null
-          document_expiry_date: string | null
-          document_file_url: string | null
-          document_number: string | null
-          document_type: string | null
-          employer: string | null
-          first_name: string | null
+          entity_type: string | null
+          goods_or_services: string | null
           id: string
-          is_us_person: boolean | null
-          issuing_country: string | null
-          last_name: string | null
-          length_of_residence: string | null
-          nationality: string | null
-          occupation: string | null
-          place_of_birth: string | null
-          postal_code: string | null
-          source_of_funds: string | null
-          source_of_wealth: string | null
-          state: string | null
+          incoming_payment_countries: string | null
+          incoming_payments_monthly_euro: string | null
+          incoming_transaction_amount: string | null
+          industry: string | null
+          outgoing_payment_countries: string | null
+          outgoing_payments_monthly_euro: string | null
+          outgoing_transaction_amount: string | null
           step_1_completed: boolean | null
           step_2_completed: boolean | null
           step_3_completed: boolean | null
           step_4_completed: boolean | null
-          tax_identification_numbers: string | null
-          tax_residency_countries: string | null
+          sub_industry: string | null
+          trades_under_different_name: boolean | null
+          trading_name: string | null
           updated_at: string
           user_id: string
+          website_or_business_channel: string | null
         }
         Insert: {
-          additional_citizenships?: string | null
-          address_line1?: string | null
-          address_line2?: string | null
-          annual_income?: string | null
-          city?: string | null
+          applicant_email?: string | null
+          applicant_first_name?: string | null
+          applicant_last_name?: string | null
+          company_name?: string | null
+          company_registration_date?: string | null
+          company_registration_number?: string | null
           completed_at?: string | null
-          contact_email?: string | null
-          contact_phone?: string | null
-          country?: string | null
+          country_of_registration?: string | null
           created_at?: string
-          date_of_birth?: string | null
-          document_expiry_date?: string | null
-          document_file_url?: string | null
-          document_number?: string | null
-          document_type?: string | null
-          employer?: string | null
-          first_name?: string | null
+          entity_type?: string | null
+          goods_or_services?: string | null
           id?: string
-          is_us_person?: boolean | null
-          issuing_country?: string | null
-          last_name?: string | null
-          length_of_residence?: string | null
-          nationality?: string | null
-          occupation?: string | null
-          place_of_birth?: string | null
-          postal_code?: string | null
-          source_of_funds?: string | null
-          source_of_wealth?: string | null
-          state?: string | null
+          incoming_payment_countries?: string | null
+          incoming_payments_monthly_euro?: string | null
+          incoming_transaction_amount?: string | null
+          industry?: string | null
+          outgoing_payment_countries?: string | null
+          outgoing_payments_monthly_euro?: string | null
+          outgoing_transaction_amount?: string | null
           step_1_completed?: boolean | null
           step_2_completed?: boolean | null
           step_3_completed?: boolean | null
           step_4_completed?: boolean | null
-          tax_identification_numbers?: string | null
-          tax_residency_countries?: string | null
+          sub_industry?: string | null
+          trades_under_different_name?: boolean | null
+          trading_name?: string | null
           updated_at?: string
           user_id: string
+          website_or_business_channel?: string | null
         }
         Update: {
-          additional_citizenships?: string | null
-          address_line1?: string | null
-          address_line2?: string | null
-          annual_income?: string | null
-          city?: string | null
+          applicant_email?: string | null
+          applicant_first_name?: string | null
+          applicant_last_name?: string | null
+          company_name?: string | null
+          company_registration_date?: string | null
+          company_registration_number?: string | null
           completed_at?: string | null
-          contact_email?: string | null
-          contact_phone?: string | null
-          country?: string | null
+          country_of_registration?: string | null
           created_at?: string
-          date_of_birth?: string | null
-          document_expiry_date?: string | null
-          document_file_url?: string | null
-          document_number?: string | null
-          document_type?: string | null
-          employer?: string | null
-          first_name?: string | null
+          entity_type?: string | null
+          goods_or_services?: string | null
           id?: string
-          is_us_person?: boolean | null
-          issuing_country?: string | null
-          last_name?: string | null
-          length_of_residence?: string | null
-          nationality?: string | null
-          occupation?: string | null
-          place_of_birth?: string | null
-          postal_code?: string | null
-          source_of_funds?: string | null
-          source_of_wealth?: string | null
-          state?: string | null
+          incoming_payment_countries?: string | null
+          incoming_payments_monthly_euro?: string | null
+          incoming_transaction_amount?: string | null
+          industry?: string | null
+          outgoing_payment_countries?: string | null
+          outgoing_payments_monthly_euro?: string | null
+          outgoing_transaction_amount?: string | null
           step_1_completed?: boolean | null
           step_2_completed?: boolean | null
           step_3_completed?: boolean | null
           step_4_completed?: boolean | null
-          tax_identification_numbers?: string | null
-          tax_residency_countries?: string | null
+          sub_industry?: string | null
+          trades_under_different_name?: boolean | null
+          trading_name?: string | null
           updated_at?: string
           user_id?: string
+          website_or_business_channel?: string | null
         }
         Relationships: []
       }
