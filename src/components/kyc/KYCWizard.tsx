@@ -6,6 +6,7 @@ import { TransactionInfoStep } from './steps/TransactionInfoStep';
 import { ApplicantDetailsStep } from './steps/ApplicantDetailsStep';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const stepTitles = [
   {
@@ -45,8 +46,14 @@ export const KYCWizard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="container mx-auto px-4 py-4">
+        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Shield className="h-6 w-6 text-primary" />
+          <span className="font-semibold text-lg">SnapAML</span>
+        </Link>
+      </div>
+      <div className="max-w-4xl mx-auto px-4 py-4">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">

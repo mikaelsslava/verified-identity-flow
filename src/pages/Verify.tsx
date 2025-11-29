@@ -57,7 +57,13 @@ export default function Verify() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-4">
+        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Shield className="h-6 w-6 text-primary" />
+          <span className="font-semibold text-lg">SnapAML</span>
+        </Link>
+      </div>
+      <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-4">
