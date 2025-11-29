@@ -42,6 +42,7 @@ interface KYBData {
 interface KYCContextType {
   currentStep: number;
   kybData: KYBData;
+  isLoading: boolean;
   setCurrentStep: (step: number) => void;
   updateCompanyDetails: (data: Partial<CompanyDetails>) => void;
   updateIndustryInfo: (data: Partial<IndustryInfo>) => void;
@@ -221,6 +222,7 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
       value={{
         currentStep,
         kybData,
+        isLoading,
         setCurrentStep,
         updateCompanyDetails,
         updateIndustryInfo,
