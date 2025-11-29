@@ -33,7 +33,12 @@ const schema = z.object({
   placeOfBirth: z.string().min(2, 'Place of birth is required').max(100),
   nationality: z.string().min(2, 'Nationality is required'),
   additionalCitizenships: z.string(),
-  residentialAddress: z.string().min(10, 'Complete address is required').max(200),
+  addressLine1: z.string().min(2, 'Address line 1 is required').max(100),
+  addressLine2: z.string(),
+  city: z.string().min(2, 'City is required').max(50),
+  state: z.string(),
+  postalCode: z.string().min(2, 'Postal code is required').max(20),
+  country: z.string().min(2, 'Country is required'),
   lengthOfResidence: z.string().min(1, 'Length of residence is required'),
   contactEmail: z.string().email('Valid email is required'),
   contactPhone: z.string().min(10, 'Valid phone number is required').max(20),
@@ -43,6 +48,7 @@ export const PersonalInfoStep = () => {
   const { kycData, updatePersonalInfo, setCurrentStep, submitStep } = useKYC();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nationalityOpen, setNationalityOpen] = useState(false);
+  const [countryOpen, setCountryOpen] = useState(false);
 
   const {
     register,
@@ -57,6 +63,7 @@ export const PersonalInfoStep = () => {
 
   const dateOfBirth = watch('dateOfBirth');
   const nationality = watch('nationality');
+  const country = watch('country');
 
   const onSubmit = async (data: PersonalInfo) => {
     try {
@@ -213,34 +220,135 @@ export const PersonalInfoStep = () => {
           </div>
         </div>
 
-        <div>
-          <Label htmlFor="residentialAddress">Residential Address *</Label>
-          <Input
-            id="residentialAddress"
-            {...register('residentialAddress')}
-            placeholder="Street, City, State, ZIP, Country"
-            className="mt-1.5"
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            Enter your complete residential address
-          </p>
-          {errors.residentialAddress && (
-            <p className="text-sm text-destructive mt-1">{errors.residentialAddress.message}</p>
-          )}
-        </div>
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Residential Address</h3>
+          
+          <div>
+            <Label htmlFor="addressLine1">Address Line 1 *</Label>
+            <Input
+              id="addressLine1"
+              {...register('addressLine1')}
+              placeholder="Street address"
+              className="mt-1.5"
+            />
+            {errors.addressLine1 && (
+              <p className="text-sm text-destructive mt-1">{errors.addressLine1.message}</p>
+            )}
+          </div>
 
-        <div>
-          <Label htmlFor="lengthOfResidence">Length of Residence (years) *</Label>
-          <Input
-            id="lengthOfResidence"
-            type="number"
-            {...register('lengthOfResidence')}
-            placeholder="5"
-            className="mt-1.5"
-          />
-          {errors.lengthOfResidence && (
-            <p className="text-sm text-destructive mt-1">{errors.lengthOfResidence.message}</p>
-          )}
+          <div>
+            <Label htmlFor="addressLine2">Address Line 2</Label>
+            <Input
+              id="addressLine2"
+              {...register('addressLine2')}
+              placeholder="Apartment, suite, etc. (optional)"
+              className="mt-1.5"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="city">City *</Label>
+              <Input
+                id="city"
+                {...register('city')}
+                placeholder="City"
+                className="mt-1.5"
+              />
+              {errors.city && (
+                <p className="text-sm text-destructive mt-1">{errors.city.message}</p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="state">State / Province</Label>
+              <Input
+                id="state"
+                {...register('state')}
+                placeholder="State or province"
+                className="mt-1.5"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="postalCode">Postal Code *</Label>
+              <Input
+                id="postalCode"
+                {...register('postalCode')}
+                placeholder="ZIP / Postal code"
+                className="mt-1.5"
+              />
+              {errors.postalCode && (
+                <p className="text-sm text-destructive mt-1">{errors.postalCode.message}</p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="country">Country *</Label>
+              <Popover open={countryOpen} onOpenChange={setCountryOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={countryOpen}
+                    className="w-full justify-between mt-1.5"
+                  >
+                    {country
+                      ? countries.find((c) => c.value === country)?.label
+                      : "Select country..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search country..." />
+                    <CommandList>
+                      <CommandEmpty>No country found.</CommandEmpty>
+                      <CommandGroup>
+                        {countries.map((c) => (
+                          <CommandItem
+                            key={c.value}
+                            value={c.label}
+                            onSelect={() => {
+                              setValue('country', c.value);
+                              setCountryOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                country === c.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {c.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {errors.country && (
+                <p className="text-sm text-destructive mt-1">{errors.country.message}</p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="lengthOfResidence">Length of Residence (years) *</Label>
+            <Input
+              id="lengthOfResidence"
+              type="number"
+              {...register('lengthOfResidence')}
+              placeholder="5"
+              className="mt-1.5"
+            />
+            {errors.lengthOfResidence && (
+              <p className="text-sm text-destructive mt-1">{errors.lengthOfResidence.message}</p>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

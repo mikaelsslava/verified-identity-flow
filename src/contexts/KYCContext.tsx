@@ -7,7 +7,12 @@ export interface PersonalInfo {
   placeOfBirth: string;
   nationality: string;
   additionalCitizenships: string;
-  residentialAddress: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
   lengthOfResidence: string;
   contactEmail: string;
   contactPhone: string;
