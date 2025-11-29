@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Shield, Edit2, Save, X } from "lucide-react";
+import { LogOut, Shield, Edit2, Save, X, Send } from "lucide-react";
 import { industries, type Industry } from "@/data/industries";
 
 type KYBData = {
@@ -40,6 +41,7 @@ type Request = {
   company_registration_number: string;
   status: string;
   created_at: string;
+  updated_at: string;
 };
 
 export default function Profile() {
@@ -47,10 +49,14 @@ export default function Profile() {
   const { toast } = useToast();
   const [kybData, setKybData] = useState<KYBData | null>(null);
   const [requests, setRequests] = useState<Request[]>([]);
+  const [outgoingRequests, setOutgoingRequests] = useState<Request[]>([]);
+  const [approvedClients, setApprovedClients] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>("");
   const [selectedIndustry, setSelectedIndustry] = useState<Industry | "">("");
+  const [newRequestCompanyNumber, setNewRequestCompanyNumber] = useState<string>("");
+  const [userEmail, setUserEmail] = useState<string>("");
 
   useEffect(() => {
     fetchData();
@@ -66,6 +72,8 @@ export default function Profile() {
         return;
       }
 
+      setUserEmail(user.email || "");
+
       // Fetch KYB submission
       const { data: submission, error: submissionError } = await supabase
         .from("kyb_submissions")
@@ -73,10 +81,12 @@ export default function Profile() {
         .eq("user_id", user.id)
         .single();
 
-      if (submissionError) throw submissionError;
+      if (submissionError && submissionError.code !== "PGRST116") {
+        throw submissionError;
+      }
       setKybData(submission);
 
-      // Fetch requests
+      // Fetch incoming requests
       if (submission?.company_registration_number) {
         const { data: requestsData, error: requestsError } = await supabase
           .from("kyb_requests")
@@ -87,6 +97,30 @@ export default function Profile() {
 
         if (requestsError) throw requestsError;
         setRequests(requestsData || []);
+      }
+
+      // Fetch outgoing requests
+      if (user.email) {
+        const { data: outgoingData, error: outgoingError } = await supabase
+          .from("kyb_requests")
+          .select("*")
+          .eq("requester_email", user.email)
+          .eq("status", "pending")
+          .order("created_at", { ascending: false });
+
+        if (outgoingError) throw outgoingError;
+        setOutgoingRequests(outgoingData || []);
+
+        // Fetch approved clients
+        const { data: approvedData, error: approvedError } = await supabase
+          .from("kyb_requests")
+          .select("*")
+          .eq("requester_email", user.email)
+          .eq("status", "approved")
+          .order("created_at", { ascending: false });
+
+        if (approvedError) throw approvedError;
+        setApprovedClients(approvedData || []);
       }
     } catch (error: any) {
       toast({
@@ -152,8 +186,62 @@ export default function Profile() {
   };
 
   const handleApproveRequest = async (requestId: string) => {
-    // Empty onSubmit as requested
-    console.log("Approving request:", requestId);
+    try {
+      const { error } = await supabase
+        .from("kyb_requests")
+        .update({ status: "approved" })
+        .eq("id", requestId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Request approved successfully",
+      });
+
+      fetchData();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSubmitRequest = async () => {
+    if (!newRequestCompanyNumber.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a company registration number",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.from("kyb_requests").insert({
+        requester_email: userEmail,
+        company_registration_number: newRequestCompanyNumber.trim(),
+        status: "pending",
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Request sent successfully",
+      });
+
+      setNewRequestCompanyNumber("");
+      fetchData();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const renderEditableField = (label: string, field: keyof KYBData, value: string | null) => {
@@ -360,22 +448,90 @@ export default function Profile() {
             </Button>
           </div>
 
-          {/* No Data State */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Welcome to SnapAML</CardTitle>
-              <CardDescription>Get started by adding your company information</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center py-8">
-              <p className="text-muted-foreground mb-6 text-center">
-                You haven't added your company information yet. Click the button below to get started with the KYB
-                verification process.
-              </p>
-              <Button onClick={() => navigate("/kyc")} size="lg">
-                Add Company Information
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            {/* No Data State */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Welcome to SnapAML</CardTitle>
+                <CardDescription>Get started by adding your company information</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center justify-center py-8">
+                <p className="text-muted-foreground mb-6 text-center">
+                  You haven't added your company information yet. Click the button below to get started with the KYB
+                  verification process.
+                </p>
+                <Button onClick={() => navigate("/kyc")} size="lg">
+                  Add Company Information
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Requests Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Requests</CardTitle>
+                <CardDescription>Manage verification requests</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="outgoing" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="outgoing">My Requests</TabsTrigger>
+                    <TabsTrigger value="approved">Approved Clients</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="outgoing" className="space-y-4">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Enter company registration number"
+                        value={newRequestCompanyNumber}
+                        onChange={(e) => setNewRequestCompanyNumber(e.target.value)}
+                      />
+                      <Button onClick={handleSubmitRequest}>
+                        <Send className="h-4 w-4 mr-2" />
+                        Request
+                      </Button>
+                    </div>
+                    {outgoingRequests.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No pending requests</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {outgoingRequests.map((request) => (
+                          <div key={request.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                            <div>
+                              <p className="font-medium">{request.company_registration_number}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {new Date(request.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <span className="text-sm text-muted-foreground">Pending</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="approved" className="space-y-4">
+                    {approvedClients.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No approved clients</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {approvedClients.map((client) => (
+                          <div key={client.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                            <div>
+                              <p className="font-medium">{client.company_registration_number}</p>
+                              <p className="text-sm text-muted-foreground">
+                                Approved on {new Date(client.updated_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     );
@@ -505,29 +661,89 @@ export default function Profile() {
           <Card>
             <CardHeader>
               <CardTitle>Requests</CardTitle>
-              <CardDescription>Manage verification requests from third parties</CardDescription>
+              <CardDescription>Manage verification requests</CardDescription>
             </CardHeader>
             <CardContent>
-              {requests.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No pending requests</p>
-              ) : (
-                <div className="space-y-4">
-                  {requests.map((request) => (
-                    <div
-                      key={request.id}
-                      className="flex items-center justify-between p-4 border border-border rounded-lg"
-                    >
-                      <div>
-                        <p className="font-medium">{request.requester_email}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {new Date(request.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <Button onClick={() => handleApproveRequest(request.id)}>Approve</Button>
+              <Tabs defaultValue="incoming" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="incoming">Incoming</TabsTrigger>
+                  <TabsTrigger value="outgoing">My Requests</TabsTrigger>
+                  <TabsTrigger value="approved">Approved Clients</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="incoming" className="space-y-4">
+                  {requests.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No pending requests</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {requests.map((request) => (
+                        <div
+                          key={request.id}
+                          className="flex items-center justify-between p-4 border border-border rounded-lg"
+                        >
+                          <div>
+                            <p className="font-medium">{request.requester_email}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(request.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <Button onClick={() => handleApproveRequest(request.id)}>Approve</Button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
+                  )}
+                </TabsContent>
+
+                <TabsContent value="outgoing" className="space-y-4">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Enter company registration number"
+                      value={newRequestCompanyNumber}
+                      onChange={(e) => setNewRequestCompanyNumber(e.target.value)}
+                    />
+                    <Button onClick={handleSubmitRequest}>
+                      <Send className="h-4 w-4 mr-2" />
+                      Request
+                    </Button>
+                  </div>
+                  {outgoingRequests.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No pending requests</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {outgoingRequests.map((request) => (
+                        <div key={request.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                          <div>
+                            <p className="font-medium">{request.company_registration_number}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(request.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <span className="text-sm text-muted-foreground">Pending</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="approved" className="space-y-4">
+                  {approvedClients.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No approved clients</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {approvedClients.map((client) => (
+                        <div key={client.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                          <div>
+                            <p className="font-medium">{client.company_registration_number}</p>
+                            <p className="text-sm text-muted-foreground">
+                              Approved on {new Date(client.updated_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         </div>
