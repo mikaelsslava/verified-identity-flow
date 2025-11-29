@@ -27,9 +27,9 @@ export default function Landing() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 flex items-center justify-center min-h-[calc(100vh-80px)]">
+      <div className="container mx-auto px-4 flex items-center justify-center min-h-[calc(100vh-120px)]">
         {/* Hero Section */}
-        <div className="text-center max-w-3xl">
+        <div className="text-center max-w-3xl -mt-20">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
             <Shield className="h-8 w-8 text-primary" />
           </div>
