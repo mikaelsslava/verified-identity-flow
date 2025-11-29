@@ -58,7 +58,9 @@ export default function Profile() {
 
   const fetchData = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         navigate("/login");
         return;
@@ -162,11 +164,7 @@ export default function Profile() {
         <span className="text-sm font-medium text-muted-foreground">{label}:</span>
         {isEditing ? (
           <div className="flex items-center gap-2">
-            <Input
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              className="h-8 w-64"
-            />
+            <Input value={editValue} onChange={(e) => setEditValue(e.target.value)} className="h-8 w-64" />
             <Button size="icon" variant="ghost" onClick={() => saveField(field)} className="h-8 w-8">
               <Save className="h-4 w-4" />
             </Button>
@@ -177,12 +175,7 @@ export default function Profile() {
         ) : (
           <div className="flex items-center gap-2">
             <span className="text-sm">{value || "N/A"}</span>
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => startEditing(field, value || "")}
-              className="h-8 w-8"
-            >
+            <Button size="icon" variant="ghost" onClick={() => startEditing(field, value || "")} className="h-8 w-8">
               <Edit2 className="h-4 w-4" />
             </Button>
           </div>
@@ -204,7 +197,7 @@ export default function Profile() {
     label: string,
     field: keyof KYBData,
     value: string | null,
-    options: { label: string; value: string }[]
+    options: { label: string; value: string }[],
   ) => {
     const isEditing = editingField === field;
 
@@ -235,12 +228,7 @@ export default function Profile() {
         ) : (
           <div className="flex items-center gap-2">
             <span className="text-sm">{value || "N/A"}</span>
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => startEditing(field, value || "")}
-              className="h-8 w-8"
-            >
+            <Button size="icon" variant="ghost" onClick={() => startEditing(field, value || "")} className="h-8 w-8">
               <Edit2 className="h-4 w-4" />
             </Button>
           </div>
@@ -376,15 +364,14 @@ export default function Profile() {
           <Card>
             <CardHeader>
               <CardTitle>Welcome to SnapAML</CardTitle>
-              <CardDescription>
-                Get started by adding your company information
-              </CardDescription>
+              <CardDescription>Get started by adding your company information</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center py-8">
               <p className="text-muted-foreground mb-6 text-center">
-                You haven't added your company information yet. Click the button below to get started with the KYB verification process.
+                You haven't added your company information yet. Click the button below to get started with the KYB
+                verification process.
               </p>
-              <Button onClick={() => navigate('/kyc')} size="lg">
+              <Button onClick={() => navigate("/kyc")} size="lg">
                 Add Company Information
               </Button>
             </CardContent>
@@ -421,29 +408,23 @@ export default function Profile() {
               <Accordion type="single" collapsible className="w-full">
                 {/* Step 1: Company Details */}
                 <AccordionItem value="step1">
-                  <AccordionTrigger>Step 1: Company Details</AccordionTrigger>
+                  <AccordionTrigger>Company Details</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-1">
                       {renderReadOnlyField("Company Name", kybData.company_name)}
                       {renderEditableField("Trading Name", "trading_name", kybData.trading_name)}
-                      {renderReadOnlyField(
-                        "Registration Number",
-                        kybData.company_registration_number
-                      )}
-                      {renderReadOnlyField(
-                        "Registration Date",
-                        kybData.company_registration_date
-                      )}
+                      {renderReadOnlyField("Registration Number", kybData.company_registration_number)}
+                      {renderReadOnlyField("Registration Date", kybData.company_registration_date)}
                       {renderReadOnlyField("Entity Type", kybData.entity_type)}
                       {renderEditableField(
                         "Country of Registration",
                         "country_of_registration",
-                        kybData.country_of_registration
+                        kybData.country_of_registration,
                       )}
                       {renderEditableField(
                         "Website/Business Channel",
                         "website_or_business_channel",
-                        kybData.website_or_business_channel
+                        kybData.website_or_business_channel,
                       )}
                     </div>
                   </AccordionContent>
@@ -451,60 +432,55 @@ export default function Profile() {
 
                 {/* Step 2: Industry Information */}
                 <AccordionItem value="step2">
-                  <AccordionTrigger>Step 2: Industry Information</AccordionTrigger>
+                  <AccordionTrigger>Industry Information</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-1">
                       {renderIndustryField()}
                       {renderSubIndustryField()}
-                      {renderSelectField(
-                        "Goods or Services",
-                        "goods_or_services",
-                        kybData.goods_or_services,
-                        [
-                          { label: "Physical goods", value: "physical-goods" },
-                          { label: "Digital goods", value: "digital-goods" },
-                          { label: "Services", value: "services" },
-                          { label: "Mixed (goods and services)", value: "mixed" },
-                        ]
-                      )}
+                      {renderSelectField("Goods or Services", "goods_or_services", kybData.goods_or_services, [
+                        { label: "Physical goods", value: "physical-goods" },
+                        { label: "Digital goods", value: "digital-goods" },
+                        { label: "Services", value: "services" },
+                        { label: "Mixed (goods and services)", value: "mixed" },
+                      ])}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
 
                 {/* Step 3: Transaction Information */}
                 <AccordionItem value="step3">
-                  <AccordionTrigger>Step 3: Transaction Information</AccordionTrigger>
+                  <AccordionTrigger>Transaction Information</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-1">
                       {renderEditableField(
                         "Incoming Payments Monthly (EUR)",
                         "incoming_payments_monthly_euro",
-                        kybData.incoming_payments_monthly_euro
+                        kybData.incoming_payments_monthly_euro,
                       )}
                       {renderEditableField(
                         "Incoming Payment Countries",
                         "incoming_payment_countries",
-                        kybData.incoming_payment_countries
+                        kybData.incoming_payment_countries,
                       )}
                       {renderEditableField(
                         "Incoming Transaction Amount",
                         "incoming_transaction_amount",
-                        kybData.incoming_transaction_amount
+                        kybData.incoming_transaction_amount,
                       )}
                       {renderEditableField(
                         "Outgoing Payments Monthly (EUR)",
                         "outgoing_payments_monthly_euro",
-                        kybData.outgoing_payments_monthly_euro
+                        kybData.outgoing_payments_monthly_euro,
                       )}
                       {renderEditableField(
                         "Outgoing Payment Countries",
                         "outgoing_payment_countries",
-                        kybData.outgoing_payment_countries
+                        kybData.outgoing_payment_countries,
                       )}
                       {renderEditableField(
                         "Outgoing Transaction Amount",
                         "outgoing_transaction_amount",
-                        kybData.outgoing_transaction_amount
+                        kybData.outgoing_transaction_amount,
                       )}
                     </div>
                   </AccordionContent>
@@ -512,19 +488,11 @@ export default function Profile() {
 
                 {/* Step 4: Applicant Details */}
                 <AccordionItem value="step4">
-                  <AccordionTrigger>Step 4: Applicant Details</AccordionTrigger>
+                  <AccordionTrigger>Applicant Details</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-1">
-                      {renderEditableField(
-                        "First Name",
-                        "applicant_first_name",
-                        kybData.applicant_first_name
-                      )}
-                      {renderEditableField(
-                        "Last Name",
-                        "applicant_last_name",
-                        kybData.applicant_last_name
-                      )}
+                      {renderEditableField("First Name", "applicant_first_name", kybData.applicant_first_name)}
+                      {renderEditableField("Last Name", "applicant_last_name", kybData.applicant_last_name)}
                       {renderEditableField("Email", "applicant_email", kybData.applicant_email)}
                     </div>
                   </AccordionContent>
@@ -537,9 +505,7 @@ export default function Profile() {
           <Card>
             <CardHeader>
               <CardTitle>Requests</CardTitle>
-              <CardDescription>
-                Manage verification requests from third parties
-              </CardDescription>
+              <CardDescription>Manage verification requests from third parties</CardDescription>
             </CardHeader>
             <CardContent>
               {requests.length === 0 ? (
@@ -557,9 +523,7 @@ export default function Profile() {
                           {new Date(request.created_at).toLocaleDateString()}
                         </p>
                       </div>
-                      <Button onClick={() => handleApproveRequest(request.id)}>
-                        Approve
-                      </Button>
+                      <Button onClick={() => handleApproveRequest(request.id)}>Approve</Button>
                     </div>
                   ))}
                 </div>
