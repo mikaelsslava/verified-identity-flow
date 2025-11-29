@@ -11,7 +11,7 @@ import { Shield, CheckCircle, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const schema = z.object({
-  companyName: z.string().min(1, 'Company name is required'),
+  companyRegistrationNumber: z.string().min(1, 'Company registration number is required'),
 });
 
 type VerifyForm = z.infer<typeof schema>;
@@ -38,7 +38,7 @@ export default function Verify() {
       const { data: submissions, error } = await supabase
         .from('kyb_submissions')
         .select('id')
-        .ilike('company_name', data.companyName)
+        .ilike('company_registration_number', data.companyRegistrationNumber)
         .not('completed_at', 'is', null)
         .limit(1);
 
@@ -76,20 +76,20 @@ export default function Verify() {
             <CardHeader>
               <CardTitle>Company Verification</CardTitle>
               <CardDescription>
-                Enter the company name to verify their KYB badge status
+                Enter the company registration number to verify their KYB badge status
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="companyName">Company Name</Label>
+                  <Label htmlFor="companyRegistrationNumber">Company Registration Number</Label>
                   <Input
-                    id="companyName"
-                    placeholder="e.g., Acme Corporation"
-                    {...register('companyName')}
+                    id="companyRegistrationNumber"
+                    placeholder="e.g., 12345678"
+                    {...register('companyRegistrationNumber')}
                   />
-                  {errors.companyName && (
-                    <p className="text-sm text-destructive">{errors.companyName.message}</p>
+                  {errors.companyRegistrationNumber && (
+                    <p className="text-sm text-destructive">{errors.companyRegistrationNumber.message}</p>
                   )}
                 </div>
 
@@ -116,7 +116,7 @@ export default function Verify() {
                       <div>
                         <h3 className="font-semibold text-lg mb-1">No Badge Found</h3>
                         <p className="text-muted-foreground">
-                          No completed KYB verification found for this company name.
+                          No completed KYB verification found for this company registration number.
                         </p>
                       </div>
                     </div>
