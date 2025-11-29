@@ -54,12 +54,19 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <Link to="/" className="flex items-center justify-center mb-4 hover:opacity-80 transition-opacity">
-            <Shield className="h-12 w-12 text-primary" />
-          </Link>
+    <div className="min-h-screen flex flex-col bg-background px-4">
+      <div className="container mx-auto px-4 py-4">
+        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Shield className="h-6 w-6 text-primary" />
+          <span className="font-semibold text-lg">SnapAML</span>
+        </Link>
+      </div>
+      <div className="flex-1 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center justify-center mb-4">
+              <Shield className="h-12 w-12 text-primary" />
+            </div>
           <CardTitle className="text-2xl text-center">Create an account</CardTitle>
           <CardDescription className="text-center">
             Start your KYC verification process
@@ -116,7 +123,8 @@ export default function Signup() {
             </p>
           </CardFooter>
         </form>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }

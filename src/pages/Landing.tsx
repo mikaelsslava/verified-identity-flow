@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Shield, CheckCircle, Lock, FileCheck } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -11,10 +11,10 @@ export default function Landing() {
       {/* Navigation */}
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <Shield className="h-6 w-6 text-primary" />
-            <span className="font-semibold">KYB Verification</span>
-          </div>
+            <span className="font-semibold text-lg">SnapAML</span>
+          </Link>
           <div className="flex gap-3">
             <Button variant="ghost" onClick={() => navigate('/verify')}>
               Verify Badge
