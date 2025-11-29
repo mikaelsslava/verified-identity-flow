@@ -474,7 +474,7 @@ export default function Profile() {
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="outgoing" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
+                  <TabsList className="grid w-full grid-cols-2 bg-background border border-border p-1">
                     <TabsTrigger value="outgoing">My Requests</TabsTrigger>
                     <TabsTrigger value="approved">Approved Clients</TabsTrigger>
                   </TabsList>
@@ -665,7 +665,7 @@ export default function Profile() {
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="incoming" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-3 bg-background border border-border p-1">
                   <TabsTrigger value="incoming">Incoming</TabsTrigger>
                   <TabsTrigger value="outgoing">My Requests</TabsTrigger>
                   <TabsTrigger value="approved">Approved Clients</TabsTrigger>
