@@ -28,8 +28,7 @@ export const ApplicantDetailsStep = () => {
       await submitStep(4, data);
       updateApplicantDetails(data);
       toast.success('Application completed successfully!');
-      // Navigate to completion page or dashboard
-      navigate('/');
+      navigate('/profile');
     } catch (error) {
       toast.error('Failed to submit application');
     }

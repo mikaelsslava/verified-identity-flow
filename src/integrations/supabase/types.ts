@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      kyb_requests: {
+        Row: {
+          company_registration_number: string
+          created_at: string
+          id: string
+          requester_email: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          company_registration_number: string
+          created_at?: string
+          id?: string
+          requester_email: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          company_registration_number?: string
+          created_at?: string
+          id?: string
+          requester_email?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       kyb_submissions: {
         Row: {
           applicant_email: string | null
