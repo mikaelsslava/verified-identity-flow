@@ -57,9 +57,9 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center mb-4">
+          <Link to="/" className="flex items-center justify-center mb-4 hover:opacity-80 transition-opacity">
             <Shield className="h-12 w-12 text-primary" />
-          </div>
+          </Link>
           <CardTitle className="text-2xl text-center">Create an account</CardTitle>
           <CardDescription className="text-center">
             Start your KYC verification process
