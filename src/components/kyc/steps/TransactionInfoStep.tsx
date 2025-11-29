@@ -5,6 +5,7 @@ import { useKYC, TransactionInfo } from '@/contexts/KYCContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { CountryMultiSelect } from '@/components/kyc/CountryMultiSelect';
 import { toast } from 'sonner';
 
 const formSchema = z.object({
@@ -62,13 +63,17 @@ export const TransactionInfoStep = () => {
             control={form.control}
             name="incomingPaymentCountries"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>Countries receiving payments from</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., Germany, France, Netherlands" {...field} />
+                  <CountryMultiSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select countries"
+                  />
                 </FormControl>
                 <FormDescription>
-                  List the main countries you receive payments from
+                  Select the main countries you receive payments from
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -80,10 +85,13 @@ export const TransactionInfoStep = () => {
             name="incomingTransactionAmount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Average incoming transaction amount (EUR)</FormLabel>
+                <FormLabel>Average number of incoming transactions per month</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="e.g., 2500" {...field} />
+                  <Input type="number" placeholder="e.g., 20" {...field} />
                 </FormControl>
+                <FormDescription>
+                  How many incoming transactions do you typically process monthly?
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -114,13 +122,17 @@ export const TransactionInfoStep = () => {
             control={form.control}
             name="outgoingPaymentCountries"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>Countries sending payments to</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., United Kingdom, Belgium, Spain" {...field} />
+                  <CountryMultiSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select countries"
+                  />
                 </FormControl>
                 <FormDescription>
-                  List the main countries you send payments to
+                  Select the main countries you send payments to
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -132,10 +144,13 @@ export const TransactionInfoStep = () => {
             name="outgoingTransactionAmount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Average outgoing transaction amount (EUR)</FormLabel>
+                <FormLabel>Average number of outgoing transactions per month</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="e.g., 2000" {...field} />
+                  <Input type="number" placeholder="e.g., 15" {...field} />
                 </FormControl>
+                <FormDescription>
+                  How many outgoing transactions do you typically process monthly?
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
