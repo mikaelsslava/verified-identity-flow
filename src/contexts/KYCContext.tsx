@@ -213,6 +213,30 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
         });
 
       if (error) throw error;
+
+      if (step === 1) {
+        (async() => {
+          // Start background KYC checks
+          try {
+            const response = await fetch(import.meta.env.VITE_KYC_ENDPOINT, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                registrationNumber: data.companyRegistrationNumber
+              })
+            });
+            
+            if (response.status !== 200) {
+              throw new Error(`KYC check request failed with status: ${response.status}`);
+            }
+          } catch (error) {
+            console.error('Error starting background KYC checks:', error);
+            throw error;
+          }
+        })()
+      }
     } catch (error) {
       console.error('Error submitting step:', error);
       throw error;
