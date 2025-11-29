@@ -4,25 +4,27 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { CalendarIcon, ArrowRight } from 'lucide-react';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { CalendarIcon, ArrowRight, Check, ChevronsUpDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useKYC, PersonalInfo } from '@/contexts/KYCContext';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { countries } from '@/data/countries';
 
 const schema = z.object({
   fullName: z.string().min(2, 'Full name is required').max(100),
@@ -39,6 +41,7 @@ const schema = z.object({
 export const PersonalInfoStep = () => {
   const { kycData, updatePersonalInfo, setCurrentStep, submitStep } = useKYC();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nationalityOpen, setNationalityOpen] = useState(false);
 
   const {
     register,
@@ -135,23 +138,49 @@ export const PersonalInfoStep = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="nationality">Nationality / Citizenship *</Label>
-            <Select
-              value={nationality}
-              onValueChange={(value) => setValue('nationality', value)}
-            >
-              <SelectTrigger className="mt-1.5">
-                <SelectValue placeholder="Select nationality" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="US">United States</SelectItem>
-                <SelectItem value="GB">United Kingdom</SelectItem>
-                <SelectItem value="CA">Canada</SelectItem>
-                <SelectItem value="AU">Australia</SelectItem>
-                <SelectItem value="DE">Germany</SelectItem>
-                <SelectItem value="FR">France</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+            <Popover open={nationalityOpen} onOpenChange={setNationalityOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={nationalityOpen}
+                  className="w-full justify-between mt-1.5"
+                >
+                  {nationality
+                    ? countries.find((country) => country.value === nationality)?.label
+                    : "Select nationality..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Search country..." />
+                  <CommandList>
+                    <CommandEmpty>No country found.</CommandEmpty>
+                    <CommandGroup>
+                      {countries.map((country) => (
+                        <CommandItem
+                          key={country.value}
+                          value={country.label}
+                          onSelect={() => {
+                            setValue('nationality', country.value);
+                            setNationalityOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              nationality === country.value ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {country.label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
             {errors.nationality && (
               <p className="text-sm text-destructive mt-1">{errors.nationality.message}</p>
             )}
