@@ -6,9 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Shield, Edit2, Save, X, Send } from "lucide-react";
+import { LogOut, Shield, Edit2, Save, X, Send, Inbox, ArrowUpRight, CheckCircle } from "lucide-react";
 import { industries, type Industry } from "@/data/industries";
 
 type KYBData = {
@@ -473,62 +472,73 @@ export default function Profile() {
                 <CardDescription>Manage verification requests</CardDescription>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="outgoing" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 bg-muted p-1">
-                    <TabsTrigger value="outgoing">My Requests</TabsTrigger>
-                    <TabsTrigger value="approved">Approved Clients</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="outgoing" className="space-y-4">
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="Enter company registration number"
-                        value={newRequestCompanyNumber}
-                        onChange={(e) => setNewRequestCompanyNumber(e.target.value)}
-                      />
-                      <Button onClick={handleSubmitRequest}>
-                        <Send className="h-4 w-4 mr-2" />
-                        Request
-                      </Button>
-                    </div>
-                    {outgoingRequests.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">No pending requests</p>
-                    ) : (
-                      <div className="space-y-4">
-                        {outgoingRequests.map((request) => (
-                          <div key={request.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                            <div>
-                              <p className="font-medium">{request.company_registration_number}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(request.created_at).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <span className="text-sm text-muted-foreground">Pending</span>
-                          </div>
-                        ))}
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="outgoing">
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="flex items-center gap-2">
+                        <ArrowUpRight className="h-4 w-4" />
+                        <span>My Requests</span>
                       </div>
-                    )}
-                  </TabsContent>
-
-                  <TabsContent value="approved" className="space-y-4">
-                    {approvedClients.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">No approved clients</p>
-                    ) : (
-                      <div className="space-y-4">
-                        {approvedClients.map((client) => (
-                          <div key={client.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                            <div>
-                              <p className="font-medium">{client.company_registration_number}</p>
-                              <p className="text-sm text-muted-foreground">
-                                Approved on {new Date(client.updated_at).toLocaleDateString()}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-4 pt-4">
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Enter company registration number"
+                          value={newRequestCompanyNumber}
+                          onChange={(e) => setNewRequestCompanyNumber(e.target.value)}
+                        />
+                        <Button onClick={handleSubmitRequest}>
+                          <Send className="h-4 w-4 mr-2" />
+                          Request
+                        </Button>
                       </div>
-                    )}
-                  </TabsContent>
-                </Tabs>
+                      {outgoingRequests.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">No pending requests</p>
+                      ) : (
+                        <div className="space-y-4">
+                          {outgoingRequests.map((request) => (
+                            <div key={request.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                              <div>
+                                <p className="font-medium">{request.company_registration_number}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {new Date(request.created_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <span className="text-sm text-muted-foreground">Pending</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="approved">
+                    <AccordionTrigger className="hover:no-underline">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Approved Clients</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="space-y-4 pt-4">
+                      {approvedClients.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">No approved clients</p>
+                      ) : (
+                        <div className="space-y-4">
+                          {approvedClients.map((client) => (
+                            <div key={client.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                              <div>
+                                <p className="font-medium">{client.company_registration_number}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  Approved on {new Date(client.updated_at).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardContent>
             </Card>
           </div>
@@ -664,86 +674,104 @@ export default function Profile() {
               <CardDescription>Manage verification requests</CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs defaultValue="incoming" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 bg-muted p-1">
-                  <TabsTrigger value="incoming">Incoming</TabsTrigger>
-                  <TabsTrigger value="outgoing">My Requests</TabsTrigger>
-                  <TabsTrigger value="approved">Approved Clients</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="incoming" className="space-y-4">
-                  {requests.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No pending requests</p>
-                  ) : (
-                    <div className="space-y-4">
-                      {requests.map((request) => (
-                        <div
-                          key={request.id}
-                          className="flex items-center justify-between p-4 border border-border rounded-lg"
-                        >
-                          <div>
-                            <p className="font-medium">{request.requester_email}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(request.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <Button onClick={() => handleApproveRequest(request.id)}>Approve</Button>
-                        </div>
-                      ))}
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="incoming">
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <Inbox className="h-4 w-4" />
+                      <span>Incoming Requests</span>
                     </div>
-                  )}
-                </TabsContent>
-
-                <TabsContent value="outgoing" className="space-y-4">
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Enter company registration number"
-                      value={newRequestCompanyNumber}
-                      onChange={(e) => setNewRequestCompanyNumber(e.target.value)}
-                    />
-                    <Button onClick={handleSubmitRequest}>
-                      <Send className="h-4 w-4 mr-2" />
-                      Request
-                    </Button>
-                  </div>
-                  {outgoingRequests.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No pending requests</p>
-                  ) : (
-                    <div className="space-y-4">
-                      {outgoingRequests.map((request) => (
-                        <div key={request.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                          <div>
-                            <p className="font-medium">{request.company_registration_number}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(request.created_at).toLocaleDateString()}
-                            </p>
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-4">
+                    {requests.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No pending requests</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {requests.map((request) => (
+                          <div
+                            key={request.id}
+                            className="flex items-center justify-between p-4 border border-border rounded-lg"
+                          >
+                            <div>
+                              <p className="font-medium">{request.requester_email}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {new Date(request.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <Button onClick={() => handleApproveRequest(request.id)}>Approve</Button>
                           </div>
-                          <span className="text-sm text-muted-foreground">Pending</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
+                        ))}
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
 
-                <TabsContent value="approved" className="space-y-4">
-                  {approvedClients.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No approved clients</p>
-                  ) : (
-                    <div className="space-y-4">
-                      {approvedClients.map((client) => (
-                        <div key={client.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                          <div>
-                            <p className="font-medium">{client.company_registration_number}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Approved on {new Date(client.updated_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                <AccordionItem value="outgoing">
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <ArrowUpRight className="h-4 w-4" />
+                      <span>My Requests</span>
                     </div>
-                  )}
-                </TabsContent>
-              </Tabs>
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-4">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Enter company registration number"
+                        value={newRequestCompanyNumber}
+                        onChange={(e) => setNewRequestCompanyNumber(e.target.value)}
+                      />
+                      <Button onClick={handleSubmitRequest}>
+                        <Send className="h-4 w-4 mr-2" />
+                        Request
+                      </Button>
+                    </div>
+                    {outgoingRequests.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No pending requests</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {outgoingRequests.map((request) => (
+                          <div key={request.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                            <div>
+                              <p className="font-medium">{request.company_registration_number}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {new Date(request.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <span className="text-sm text-muted-foreground">Pending</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="approved">
+                  <AccordionTrigger className="hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4" />
+                      <span>Approved Clients</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-4">
+                    {approvedClients.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No approved clients</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {approvedClients.map((client) => (
+                          <div key={client.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                            <div>
+                              <p className="font-medium">{client.company_registration_number}</p>
+                              <p className="text-sm text-muted-foreground">
+                                Approved on {new Date(client.updated_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </CardContent>
           </Card>
         </div>
