@@ -5,8 +5,11 @@ import { IndustryInfoStep } from './steps/IndustryInfoStep';
 import { TransactionInfoStep } from './steps/TransactionInfoStep';
 import { ApplicantDetailsStep } from './steps/ApplicantDetailsStep';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Shield, LogOut } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const stepTitles = [
   {
@@ -29,6 +32,21 @@ const stepTitles = [
 
 export const KYCWizard = () => {
   const { currentStep } = useKYC();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      navigate('/');
+    }
+  };
 
   const renderStep = () => {
     switch (currentStep) {
@@ -48,10 +66,16 @@ export const KYCWizard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="container mx-auto px-4 py-4">
-        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <Shield className="h-6 w-6 text-primary" />
-          <span className="font-semibold text-lg">SnapAML</span>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Shield className="h-6 w-6 text-primary" />
+            <span className="font-semibold text-lg">SnapAML</span>
+          </Link>
+          <Button variant="ghost" size="sm" onClick={handleLogout}>
+            <LogOut className="h-4 w-4 mr-2" />
+            Log out
+          </Button>
+        </div>
       </div>
       <div className="max-w-4xl mx-auto px-4 py-4">
         {/* Header */}
