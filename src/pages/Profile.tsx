@@ -42,6 +42,7 @@ type kybUserData = {
 type Request = {
   id: string;
   requester_email: string;
+  requester_user_id: string;
   company_registration_number: string;
   status: string;
   created_at: string;
@@ -108,10 +109,16 @@ export default function Profile() {
         const { data: requestsData, error: requestsError } = await supabase
           .from("kyb_requests")
           .select("*")
+          .eq('company_registration_number', submission.company_registration_number)
           .order("created_at", { ascending: false });
 
+        console.log('submission.company_registration_number', submission.company_registration_number)
+        console.log('requestsData', requestsData)
+
         if (requestsError) throw requestsError;
+        console.log('requestsData', requestsData)
         setRequests(requestsData || []);
+
       }
 
       const { data: riskProfiles, error: riskProfilesError } = await supabase
@@ -123,7 +130,7 @@ export default function Profile() {
       // Get approved requests to filter risk profiles
       const { data: approvedRequests, error: approvedRequestsError } = await supabase
         .from("kyb_requests")
-        .select("company_registration_number")
+        .select("*")
         .eq("requester_user_id", user.id)
         .eq("status", "approved");
 
@@ -202,15 +209,30 @@ export default function Profile() {
     }
   };
 
-  const handleApproveRequest = async (requestId: string) => {
+  const handleApproveRequest = async (request: Request) => {
     try {
       const { error } = await supabase
         .from("kyb_requests")
         .update({ status: "approved" })
-        .eq("id", requestId);
+        .eq("id", request.id);
+
+        console.log('Approving request', request)
+        console.log('Approving request', error)
 
       if (error) throw error;
 
+      const { error: errorTwo } = await supabase
+        .from("kyb_approved_requests")
+        .insert({
+          user_id: request.requester_user_id,
+          requested_user_id: await supabase.auth.getUser().then(({ data: { user } }) => user?.id || null),
+          company_registration_number: request.company_registration_number,
+        })
+
+        if (error) throw error;
+        if (errorTwo) throw errorTwo;
+
+        
       toast({
         title: "Success",
         description: "Request approved successfully",
@@ -766,7 +788,11 @@ export default function Profile() {
                       <p className="text-sm text-muted-foreground">No pending requests</p>
                     ) : (
                       <div className="space-y-4">
-                        {requests.map((request) => (
+                        {requests.filter((value) => {
+                          console.log('request', value)
+                          return value.status === "pending"
+                        }).map((request) => {
+                          return(
                           <div
                             key={request.id}
                             className="flex items-center justify-between p-4 border border-border rounded-lg"
@@ -777,9 +803,9 @@ export default function Profile() {
                                 {new Date(request.created_at).toLocaleDateString()}
                               </p>
                             </div>
-                            <Button onClick={() => handleApproveRequest(request.id)}>Approve</Button>
+                            <Button onClick={() => handleApproveRequest(request)}>Approve</Button>
                           </div>
-                        ))}
+                        )})}
                       </div>
                     )}
                   </AccordionContent>

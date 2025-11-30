@@ -173,13 +173,41 @@ export type Database = {
           },
         ]
       }
+      kyb_approved_requests: {
+        Row: {
+          company_registration_number: string | null
+          created_at: string
+          id: number
+          requested_user_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          company_registration_number?: string | null
+          created_at?: string
+          id?: number
+          requested_user_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          company_registration_number?: string | null
+          created_at?: string
+          id?: number
+          requested_user_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       kyb_requests: {
         Row: {
           company_registration_number: string
           created_at: string
           id: string
+          requested_user_id: string | null
           requester_email: string
-          requester_user_id: string | null
+          requester_user_id: string
           status: string
           updated_at: string
         }
@@ -187,8 +215,9 @@ export type Database = {
           company_registration_number: string
           created_at?: string
           id?: string
+          requested_user_id?: string | null
           requester_email: string
-          requester_user_id?: string | null
+          requester_user_id: string
           status?: string
           updated_at?: string
         }
@@ -196,8 +225,9 @@ export type Database = {
           company_registration_number?: string
           created_at?: string
           id?: string
+          requested_user_id?: string | null
           requester_email?: string
-          requester_user_id?: string | null
+          requester_user_id?: string
           status?: string
           updated_at?: string
         }
