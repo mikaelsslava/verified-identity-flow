@@ -102,6 +102,7 @@ export default function Profile() {
       if (kybUserDataError && kybUserDataError.code !== "PGRST116") {
         throw kybUserDataError;
       }
+
       setkybUserData(kybUserData);
 
       // Fetch incoming requests
@@ -866,6 +867,12 @@ export default function Profile() {
                           const companyRiskProfile = companyRiskProfiles.find(
                             (profile) => profile.submission_id === client.id,
                           );
+
+                          if (!companyRiskProfile) {
+                            return <></>
+                          
+                          }
+
                           return (
                           <div key={client.id} className="p-4 border border-border rounded-lg space-y-3">
                             <div className="flex items-start justify-between">
@@ -880,9 +887,9 @@ export default function Profile() {
                               </div>
                               {companyRiskProfile && (
                                 <div className="flex flex-col gap-2">
-                                  {companyRiskProfile.overall_risk_level && (
-                                    <Badge className={getRiskLevelColor(companyRiskProfile.overall_risk_level)}>
-                                      {companyRiskProfile.overall_risk_level.toUpperCase()} RISK
+                                  {(companyRiskProfile.overall_risk_level || companyRiskProfile.risk_level) && (
+                                    <Badge className={getRiskLevelColor(companyRiskProfile.risk_level)}>
+                                      {companyRiskProfile.overall_risk_level?.toUpperCase() || companyRiskProfile.risk_level?.toUpperCase()} RISK
                                     </Badge>
                                   )}
                                   {companyRiskProfile.sepa && (
@@ -962,7 +969,7 @@ export default function Profile() {
                                     </div>
                                     <div className="flex justify-between text-xs">
                                       <span className="text-muted-foreground">Sanctions Match:</span>
-                                      <span className={companyRiskProfile.sanctions_match ? "text-red-600" : "text-green-600"}>
+                                      <span className={companyRiskProfile.is_sanctioned ? "text-red-600" : "text-green-600"}>
                                         {companyRiskProfile.sanctions_match ? "Yes" : "No"}
                                       </span>
                                     </div>
@@ -1027,10 +1034,11 @@ export default function Profile() {
                             )}
                             
                             {!companyRiskProfile && (
-                              <div className="flex items-center gap-2 pt-2 border-t border-border">
-                                <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                                <span className="text-sm text-muted-foreground">No risk profile data available</span>
-                              </div>
+                              // <div className="flex items-center gap-2 pt-2 border-t border-border">
+                              //   <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                              //   <span className="text-sm text-muted-foreground">No risk profile data available</span>
+                              // </div>
+                              <></>
                             )}
                           </div>
                           )}
