@@ -35,11 +35,9 @@ export default function Verify() {
       setHasSearched(false);
 
       // Query database to check if company exists with completed submission
-      const { data: submissions, error } = await supabase
-        .from("kyb_submissions")
+      const { data: submissions, error } = await supabase.from("kyb_submissions_exists")
         .select("id")
         .ilike("company_registration_number", data.companyRegistrationNumber)
-        .not("completed_at", "is", null)
         .limit(1);
 
       if (error) throw error;

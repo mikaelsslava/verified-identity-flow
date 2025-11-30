@@ -14,12 +14,172 @@ export type Database = {
   }
   public: {
     Tables: {
+      company_risk_profiles: {
+        Row: {
+          address: string | null
+          adverse_media_links: Json | null
+          adverse_media_mentions: number | null
+          adverse_media_risk_score: number | null
+          adverse_media_summary: string | null
+          checked_at: string | null
+          city: string | null
+          closed_status: string | null
+          company_name: string | null
+          company_type_code: string | null
+          has_insolvency: boolean | null
+          has_insolvency_history: boolean | null
+          id: string
+          insolvency_court_name: string | null
+          insolvency_details: string | null
+          insolvency_ended_date: string | null
+          insolvency_form: string | null
+          insolvency_started_date: string | null
+          insolvency_type: string | null
+          is_active: boolean | null
+          is_pep: boolean | null
+          is_sanctioned: boolean | null
+          legal_form: string | null
+          overall_risk_level: string | null
+          pep_details: Json | null
+          profile_data: Json | null
+          region: string | null
+          registered_date: string | null
+          registration_date: string | null
+          registration_number: string
+          regtype_text: string | null
+          risk_level: string | null
+          sanction_details: Json | null
+          sanction_sources: Json | null
+          sanctions_details: Json | null
+          sanctions_match: boolean | null
+          sepa: string | null
+          submission_id: string
+          tax_explanation: string | null
+          tax_rating: string | null
+          tax_rating_updated_date: string | null
+          tax_status_explanation: string | null
+          terminated_date: string | null
+          vies_address: string | null
+          vies_valid: boolean | null
+        }
+        Insert: {
+          address?: string | null
+          adverse_media_links?: Json | null
+          adverse_media_mentions?: number | null
+          adverse_media_risk_score?: number | null
+          adverse_media_summary?: string | null
+          checked_at?: string | null
+          city?: string | null
+          closed_status?: string | null
+          company_name?: string | null
+          company_type_code?: string | null
+          has_insolvency?: boolean | null
+          has_insolvency_history?: boolean | null
+          id?: string
+          insolvency_court_name?: string | null
+          insolvency_details?: string | null
+          insolvency_ended_date?: string | null
+          insolvency_form?: string | null
+          insolvency_started_date?: string | null
+          insolvency_type?: string | null
+          is_active?: boolean | null
+          is_pep?: boolean | null
+          is_sanctioned?: boolean | null
+          legal_form?: string | null
+          overall_risk_level?: string | null
+          pep_details?: Json | null
+          profile_data?: Json | null
+          region?: string | null
+          registered_date?: string | null
+          registration_date?: string | null
+          registration_number: string
+          regtype_text?: string | null
+          risk_level?: string | null
+          sanction_details?: Json | null
+          sanction_sources?: Json | null
+          sanctions_details?: Json | null
+          sanctions_match?: boolean | null
+          sepa?: string | null
+          submission_id: string
+          tax_explanation?: string | null
+          tax_rating?: string | null
+          tax_rating_updated_date?: string | null
+          tax_status_explanation?: string | null
+          terminated_date?: string | null
+          vies_address?: string | null
+          vies_valid?: boolean | null
+        }
+        Update: {
+          address?: string | null
+          adverse_media_links?: Json | null
+          adverse_media_mentions?: number | null
+          adverse_media_risk_score?: number | null
+          adverse_media_summary?: string | null
+          checked_at?: string | null
+          city?: string | null
+          closed_status?: string | null
+          company_name?: string | null
+          company_type_code?: string | null
+          has_insolvency?: boolean | null
+          has_insolvency_history?: boolean | null
+          id?: string
+          insolvency_court_name?: string | null
+          insolvency_details?: string | null
+          insolvency_ended_date?: string | null
+          insolvency_form?: string | null
+          insolvency_started_date?: string | null
+          insolvency_type?: string | null
+          is_active?: boolean | null
+          is_pep?: boolean | null
+          is_sanctioned?: boolean | null
+          legal_form?: string | null
+          overall_risk_level?: string | null
+          pep_details?: Json | null
+          profile_data?: Json | null
+          region?: string | null
+          registered_date?: string | null
+          registration_date?: string | null
+          registration_number?: string
+          regtype_text?: string | null
+          risk_level?: string | null
+          sanction_details?: Json | null
+          sanction_sources?: Json | null
+          sanctions_details?: Json | null
+          sanctions_match?: boolean | null
+          sepa?: string | null
+          submission_id?: string
+          tax_explanation?: string | null
+          tax_rating?: string | null
+          tax_rating_updated_date?: string | null
+          tax_status_explanation?: string | null
+          terminated_date?: string | null
+          vies_address?: string | null
+          vies_valid?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_risk_profiles_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "kyb_submissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_risk_profiles_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "kyb_submissions_exists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kyb_requests: {
         Row: {
           company_registration_number: string
           created_at: string
           id: string
           requester_email: string
+          requester_user_id: string | null
           status: string
           updated_at: string
         }
@@ -28,6 +188,7 @@ export type Database = {
           created_at?: string
           id?: string
           requester_email: string
+          requester_user_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -36,6 +197,7 @@ export type Database = {
           created_at?: string
           id?: string
           requester_email?: string
+          requester_user_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -62,6 +224,8 @@ export type Database = {
           outgoing_payment_countries: string | null
           outgoing_payments_monthly_euro: string | null
           outgoing_transaction_amount: string | null
+          results: Json | null
+          status: string | null
           step_1_completed: boolean | null
           step_2_completed: boolean | null
           step_3_completed: boolean | null
@@ -93,6 +257,8 @@ export type Database = {
           outgoing_payment_countries?: string | null
           outgoing_payments_monthly_euro?: string | null
           outgoing_transaction_amount?: string | null
+          results?: Json | null
+          status?: string | null
           step_1_completed?: boolean | null
           step_2_completed?: boolean | null
           step_3_completed?: boolean | null
@@ -124,6 +290,8 @@ export type Database = {
           outgoing_payment_countries?: string | null
           outgoing_payments_monthly_euro?: string | null
           outgoing_transaction_amount?: string | null
+          results?: Json | null
+          status?: string | null
           step_1_completed?: boolean | null
           step_2_completed?: boolean | null
           step_3_completed?: boolean | null
@@ -139,7 +307,21 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      kyb_submissions_exists: {
+        Row: {
+          company_registration_number: string | null
+          id: string | null
+        }
+        Insert: {
+          company_registration_number?: string | null
+          id?: string | null
+        }
+        Update: {
+          company_registration_number?: string | null
+          id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
